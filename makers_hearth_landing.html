@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makers Hearth - Where Craft Meets Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #faf8f5;
+            color: #2a2a2a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)" opacity="0.03"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(250, 248, 245, 0.95), rgba(250, 248, 245, 0));
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: #2a2a2a;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+        }
+
+        .nav-links a {
+            color: #2a2a2a;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 65%;
+            padding-top: 5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: #5a5a5a;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-primary {
+            background: #2a2a2a;
+            color: #faf8f5;
+        }
+
+        .btn-primary:hover {
+            background: #4a4a4a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #2a2a2a;
+            border: 1px solid #2a2a2a;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2a2a;
+            color: #faf8f5;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35%;
+            height: 70vh;
+            background: linear-gradient(135deg, #d4c5b0 0%, #8b7355 100%);
+            border-radius: 2px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .floating-accent {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            border-radius: 50%;
+            top: 20%;
+            right: 15%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        section {
+            padding: 8rem 5%;
+        }
+
+        .philosophy {
+            background: #f0ebe3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .philosophy-text h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .philosophy-text p {
+            font-size: 1.15rem;
+            color: #5a5a5a;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .philosophy-visual {
+            height: 500px;
+            background: linear-gradient(45deg, #8b7355 0%, #d4c5b0 100%);
+            position: relative;
+            border-radius: 2px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+        }
+
+        .features {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 5rem;
+            text-align: center;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+        }
+
+        .feature-card {
+            text-align: left;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0ebe3;
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #5a5a5a;
+            line-height: 1.8;
+        }
+
+        .community {
+            background: #2a2a2a;
+            color: #faf8f5;
+            text-align: center;
+        }
+
+        .community h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .community p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: #d4c5b0;
+            line-height: 1.8;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+            margin-top: 5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 300;
+            color: #d4c5b0;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #8b7355;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .waitlist {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .waitlist h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .waitlist p {
+            font-size: 1.2rem;
+            color: #5a5a5a;
+            margin-bottom: 3rem;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            border: 1px solid #d4c5b0;
+            background: #fff;
+            border-radius: 0;
+        }
+
+        footer {
+            background: #f0ebe3;
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: #5a5a5a;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.6;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-image {
+                display: none;
+            }
+
+            .philosophy {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .stats {
+                gap: 3rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 5%;
+            }
+
+            section {
+                padding: 5rem 5%;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .email-input {
+                min-width: 100%;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain-overlay"></div>
+
+    <nav>
+        <div class="logo">Makers Hearth</div>
+        <div class="nav-links">
+            <a href="#philosophy">Philosophy</a>
+            <a href="#features">Features</a>
+            <a href="#community">Community</a>
+            <a href="#join">Join</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Where craft meets community</h1>
+            <p class="hero-subtitle">The modern gathering place for woodworking tradition. Master craftspeople mentor the next generation while collectors discover pieces made with soul.</p>
+            <div class="cta-group">
+                <a href="#join" class="btn btn-primary">Join the Waitlist</a>
+                <a href="#philosophy" class="btn btn-secondary">Our Story</a>
+            </div>
+        </div>
+        <div class="hero-image"></div>
+        <div class="floating-accent"></div>
+    </section>
+
+    <section class="philosophy" id="philosophy">
+        <div class="philosophy-text">
+            <h2>A gathering place for makers</h2>
+            <p>The hearth has always been where stories are shared, skills are passed down, and community is forged. We're building the digital hearth for woodworking—a place where tradition meets tomorrow.</p>
+            <p>Here, seasoned artisans find their global audience. Emerging makers learn from masters. And collectors discover pieces that carry the weight of legacy and the warmth of human hands.</p>
+        </div>
+        <div class="philosophy-visual"></div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Built for makers, by makers</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🪵</div>
+                <h3>Curated Marketplace</h3>
+                <p>Every piece tells a story. Our platform connects discerning collectors with artisans who pour their soul into every cut, joint, and finish.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Mentorship Network</h3>
+                <p>Learn from masters. Share your journey. The next generation of woodworkers thrives when knowledge flows freely between those who've walked the path.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Global Reach</h3>
+                <p>Your workshop might be local, but your audience is worldwide. We handle logistics so you can focus on your craft.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Legacy Archive</h3>
+                <p>Document your techniques, preserve your methods. Build a library of knowledge that outlasts any single piece.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💼</div>
+                <h3>Fair Commerce</h3>
+                <p>Transparent pricing, fair fees, direct connections. Your work deserves compensation that honors the hours and skill invested.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3>Educational Hub</h3>
+                <p>Workshops, tutorials, and courses from established makers. Learn traditional techniques and contemporary innovations side by side.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="community" id="community">
+        <h2>Join a movement</h2>
+        <p>We're building more than a platform. We're cultivating a community where craftsmanship thrives, knowledge flows, and every piece of wood becomes a story worth telling.</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Artisans</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">50k+</span>
+                <span class="stat-label">Community</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">20+</span>
+                <span class="stat-label">Countries</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="waitlist" id="join">
+        <h2>Be among the first</h2>
+        <p>Makers Hearth launches soon. Join our waitlist to get early access, founding member benefits, and a voice in shaping the future of woodworking commerce.</p>
+        <form class="email-form" onsubmit="handleSubmit(event)">
+            <input type="email" class="email-input" placeholder="Enter your email" required>
+            <button type="submit" class="btn btn-primary">Join Waitlist</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">Makers Hearth</div>
+            <div class="footer-links">
+                <a href="#philosophy">About</a>
+                <a href="#features">Features</a>
+                <a href="#community">Community</a>
+                <a href="mailto:hello@makershearth.com">Contact</a>
+            </div>
+            <div style="color: #5a5a5a;">© 2025 Makers Hearth. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        function handleSubmit(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('.email-input').value;
+            alert(`Thank you for joining! We'll reach out to ${email} when we launch.`);
+            e.target.reset();
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
